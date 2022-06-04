@@ -94,17 +94,17 @@ echo 'LANG=en_US.UTF-8' > /mnt/etc/locale.conf
 # Configure system
 echo 'Configuring rc.conf in /mnt...'
 echo "\
-KEYMAP='us'
-TIMEZONE='Asia/Manila'
+KEYMAP=\"us\"
+TIMEZONE=\"Asia/Manila\"
 " >> /mnt/etc/rc.conf
 
 # Configure dracut
 echo 'Configuring dracut in /mnt...'
 echo "\
-hostonly='yes'
-nofsck='yes'
-add_dracutmodules+=' zfs '
-omit_dracutmodules+=' btrfs resume '
+hostonly=\"yes\"
+nofsck=\"yes\"
+add_dracutmodules+=\" zfs \"
+omit_dracutmodules+=\" btrfs resume \"
 " > /mnt/etc/dracut.conf.d/zol.conf
 
 ### Configure username
