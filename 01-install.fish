@@ -1,5 +1,23 @@
 #!/bin/fish
 
+########## FUNCTIONS
+function print_error
+  set_color -o red; echo $argv
+  set_color normal
+end
+
+function print_success
+  set_color -o green; echo $argv
+  set_color normal
+end
+
+function print_info
+  set_color -o blue; echo $argv
+  set_color normal
+end
+
+########## MAIN START
+
 # Root dataset
 set -l root_dataset $(cat /tmp/root_dataset)
 
@@ -12,19 +30,14 @@ echo  'Copying XBPS keys'
 mkdir -p /mnt/var/db/xbps/keys
 cp /var/db/xbps/keys/* /mnt/var/db/xbps/keys/
 
-### Install base system
+### Install base system and additional packages
 echo 'Installing Void Linux - base system...'
 set -gx XBPS_ARCH $xbps_arch
-xbps-install -y -S -r /mnt -R $preferred_repo base-system; and echo "Base-system installed."
-
-# Init chroot
-echo 'Pre-chroot initialization...'
-mount --rbind /sys /mnt/sys && mount --make-rslave /mnt/sys
-mount --rbind /dev /mnt/dev && mount --make-rslave /mnt/dev
-mount --rbind /proc /mnt/proc && mount --make-rslave /mnt/proc
-
-# Disable gummiboot post install hooks, only installs for generate-zbm
-echo "GUMMIBOOT_DISABLE=1" > /mnt/etc/default/gummiboot
+if not xbps-install -y -S -r /mnt -R $preferred_repo base-system
+  print_error "Error occurred while installing base system packages. Exiting..."
+  exit 1
+end
+echo "Base-system installed."
 
 echo 'Installing packages...'
 set -l packages \
@@ -42,7 +55,20 @@ git \
 vim \
 fish-shell
 
-xbps-install -y -S -r /mnt -R $preferred_repo $packages; and echo "Additional packages installed."
+if not xbps-install -y -S -r /mnt -R $preferred_repo $packages
+  print_error "Error occurred while installing additional packages. Exiting..."
+  exit 1
+end
+echo "Additional packages installed."
+
+# Disable gummiboot post install hooks, only installs for generate-zbm
+echo "GUMMIBOOT_DISABLE=1" > /mnt/etc/default/gummiboot
+
+# Init chroot
+echo 'Pre-chroot initialization...'
+mount --rbind /sys /mnt/sys && mount --make-rslave /mnt/sys
+mount --rbind /dev /mnt/dev && mount --make-rslave /mnt/dev
+mount --rbind /proc /mnt/proc && mount --make-rslave /mnt/proc
 
 # Set hostname
 echo 'Setting hostname...'
