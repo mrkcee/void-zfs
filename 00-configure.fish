@@ -19,23 +19,23 @@ end
 ########## MAIN START
 ########## 1a. Select DISK to use ##########
 echo "List of available disks:"
-set -l all_disks $(ls -1 /dev/disk/by-id)
+set -l all_disks $(find /dev/disk/by-id/ -type l ! -iwholename "*-part*" ! -iwholename "*wwn*" -printf "%f\n")
 
 set -l disk_count $(count $all_disks)
 for i in (seq 1 $disk_count)
   # color, index, color, disk, color
-  printf '(%s%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
+  printf '%s(%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
 end
 
 read -l -p 'echo "Select the disk you want to install to: "' selected_option
 if test "$selected_option" = ""
   print_error "Invalid option. Exiting..."
-  return 0
+  exit 1
 else if test $selected_option -ge 1 && test $selected_option -le $disk_count
   set selected_disk $all_disks[$selected_option]
 else
   print_error "Invalid option. Exiting..."
-  return 0
+  exit 1
 end
 
 print_info "Selected disk:" $selected_disk
