@@ -15,7 +15,7 @@ cp /var/db/xbps/keys/* /mnt/var/db/xbps/keys/
 ### Install base system
 echo 'Installing Void Linux - base system...'
 set -gx XBPS_ARCH $xbps_arch
-xbps-install -y -S -r /mnt -R $preferred_repo base-system
+xbps-install -y -S -r /mnt -R $preferred_repo base-system; and echo "Base-system installed."
 
 # Init chroot
 echo 'Pre-chroot initialization...'
@@ -42,7 +42,7 @@ git \
 vim \
 fish-shell
 
-xbps-install -y -S -r /mnt -R $preferred_repo $packages
+xbps-install -y -S -r /mnt -R $preferred_repo $packages; and echo "Additional packages installed."
 
 # Set hostname
 echo 'Setting hostname...'
