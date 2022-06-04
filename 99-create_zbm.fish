@@ -22,7 +22,7 @@ set -l all_disks $(ls -1 /dev/disk/by-id)
 
 set -l disk_count $(count $all_disks)
 for i in (seq 1 $disk_count)
-  # color, index, color, disk
+  # color, index, color, disk, color
   printf '(%s%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
 end
 
@@ -38,6 +38,7 @@ else
 end
 
 print_info "Selected disk:" $selected_disk
+set -l selected_disk "/dev/disk/by-id/"$selected_disk
 
 echo "Checking boot EFI entries..."
 modprobe efivarfs
