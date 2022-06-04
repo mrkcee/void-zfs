@@ -1,0 +1,61 @@
+#!/bin/fish
+
+########## FUNCTIONS
+function print_error
+  set_color -o red; echo $argv
+  set_color normal
+end
+
+function print_success
+  set_color -o green; echo $argv
+  set_color normal
+end
+
+function print_info
+  set_color -o blue; echo $argv
+  set_color normal
+end
+
+########## MAIN
+echo 'Importing zpool...'
+zpool import -d /dev/disk/by-id -R /mnt zroot -N -f
+
+echo 'Mounting datasets...'
+set -l rootfs_dataset "void"
+zfs mount zroot/ROOT/$rootfs_dataset
+zfs mount -a
+
+echo "List of available disks:"
+set -l all_disks $(ls -1 /dev/disk/by-id)
+
+set -l disk_count $(count $all_disks)
+for i in (seq 1 $disk_count)
+  # color, index, color, disk, color
+  printf '(%s%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
+end
+
+read -l -p 'echo "Select the disk you installed on: "' selected_option
+if test "$selected_option" = ""
+  print_error "Invalid option. Exiting..."
+  return 0
+else if test $selected_option -ge 1 && test $selected_option -le $disk_count
+  set selected_disk $all_disks[$selected_option]
+else
+  print_error "Invalid option. Exiting..."
+  return 0
+end
+
+print_info "Selected disk:" $selected_disk
+set -l selected_disk "/dev/disk/by-id/"$selected_disk
+set -l efi_partition $selected_disk"-part1"
+
+echo 'Mounting EFI partition...'
+mount $efi_partition /mnt/efi
+
+echo 'Pre-chroot initialization'
+mount --rbind /sys /mnt/sys && mount --make-rslave /mnt/sys
+mount --rbind /dev /mnt/dev && mount --make-rslave /mnt/dev
+mount --rbind /proc /mnt/proc && mount --make-rslave /mnt/proc
+
+echo 'Executing chroot command...'
+chroot /mnt /bin/bash
