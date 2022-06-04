@@ -48,7 +48,7 @@ xbps-install -y -S -r /mnt -R $preferred_repo $packages
 
 # Set hostname
 echo 'Setting hostname...'
-read -l -p 'Enter hostname: ' hostname
+read -l -p "echo 'Enter hostname: '" hostname
 echo $hostname > /mnt/etc/hostname
 
 # Configure zfs
@@ -85,7 +85,7 @@ omit_dracutmodules+=' btrfs resume '
 
 ### Configure username
 echo 'Setting username...'
-read -l -p "Enter username: " user
+read -l -p "echo 'Enter username: '" user
 
 ### Chroot
 echo 'Performing chroot to /mnt to configure service...'
