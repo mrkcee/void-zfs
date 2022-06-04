@@ -27,23 +27,21 @@ mount --rbind /proc /mnt/proc && mount --make-rslave /mnt/proc
 echo "GUMMIBOOT_DISABLE=1" > /mnt/etc/default/gummiboot
 
 echo 'Installing packages...'
-set -l packages $(echo "
-zfs
-zfsbootmenu
-efibootmgr
-gummiboot
-chrony
-snooze
-acpid
-socklog-void
-NetworkManager
-openresolv
-git
-vim
+set -l packages \
+zfs \
+zfsbootmenu \
+efibootmgr \
+gummiboot \
+chrony \
+snooze \
+acpid \
+socklog-void \
+NetworkManager \
+openresolv \
+git \
+vim \
 fish-shell
-")
 
-set -l packages $(echo $packages | string trim)
 xbps-install -y -S -r /mnt -R $preferred_repo $packages
 
 # Set hostname
