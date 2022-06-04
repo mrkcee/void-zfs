@@ -42,10 +42,12 @@ set -l selected_disk "/dev/disk/by-id/"$selected_disk
 
 echo "Checking boot EFI entries..."
 modprobe efivarfs
-mountpoint -q /sys/firmware/efi/efivars \
-    || mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+if not mountpoint -q /sys/firmware/efi/efivars || mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+  print_error "EFI is not available."
+  exit 1
+end
 
-if ! efibootmgr | grep ZFSBootMenu
+if not efibootmgr | grep ZFSBootMenu
   echo "ZFSBootMenu not found."
   echo "Creating boot entries..."
   efibootmgr --disk "$DISK" \

@@ -144,12 +144,13 @@ echo 'Setting root password...'
 chroot /mnt /bin/passwd
 
 # Set user passwd
-printf 'Setting %s password...' $user
+printf 'Setting %s password...\n' $user
 chroot /mnt /bin/passwd $user
 
 # Configuring sudo
 echo 'Configuring sudo in /mnt...'
-echo "root ALL=(ALL) ALL
+echo "\
+root ALL=(ALL) ALL
 $user ALL=(ALL) ALL
 Defaults rootpw
 " > /mnt/etc/sudoers
@@ -160,7 +161,8 @@ mkdir -p /mnt/efi/EFI/ZBM /etc/zfsbootmenu/dracut.conf.d
 
 # Generate ZFSBootMenu efi
 echo 'Configuring ZFSBootMenu...'
-echo "Global:
+echo "\
+Global:
   ManageImages: true
   BootMountPoint: /efi
   DracutConfDir: /etc/zfsbootmenu/dracut.conf.d
@@ -210,8 +212,10 @@ set -l selected_disk "/dev/disk/by-id/"$selected_disk
 
 echo "Checking boot EFI entries..."
 modprobe efivarfs
-mountpoint -q /sys/firmware/efi/efivars \
-    || mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+if not mountpoint -q /sys/firmware/efi/efivars || mount -t efivarfs efivarfs /sys/firmware/efi/efivars
+  print_error "EFI is not available."
+  exit 1
+end
 
 if ! efibootmgr | grep ZFSBootMenu
   echo "ZFSBootMenu not found."
