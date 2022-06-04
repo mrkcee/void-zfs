@@ -27,7 +27,7 @@ for i in (seq 1 $disk_count)
   printf '(%s%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
 end
 
-read -l -p 'echo "Select the disk you installed on: "' selected_option
+read -l -p 'echo "Select the disk you want to install to: "' selected_option
 if test "$selected_option" = ""
   print_error "Invalid option. Exiting..."
   return 0
@@ -53,7 +53,7 @@ sgdisk -n1:1M:+512M -t1:EF00 "$selected_disk"
 set -l efi_partition $selected_disk"-part1"
 
 # ZFS part
-print "Creating ZFS partition..."
+echo "Creating ZFS partition..."
 sgdisk -n2:0:0 -t2:bf01 "$selected_disk"
 
 # Inform kernel
@@ -61,7 +61,7 @@ partprobe "$selected_disk"
 
 # Format efi part
 sleep 1
-print "Formatting EFI partition..."
+echo "Formatting EFI partition..."
 mkfs.vfat "$efi_partition"
 
 ######### 3. Create pool  ##########

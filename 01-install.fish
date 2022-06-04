@@ -13,7 +13,7 @@ mkdir -p /mnt/var/db/xbps/keys
 cp /var/db/xbps/keys/* /mnt/var/db/xbps/keys/
 
 ### Install base system
-print 'Installing Void Linux - base system...'
+echo 'Installing Void Linux - base system...'
 set -gx XBPS_ARCH $xbps_arch
 xbps-install -y -S -r /mnt -R $preferred_repo base-system
 
@@ -44,11 +44,11 @@ fish-shell
 ")
 
 set -l packages $(echo $packages | string trim)
-xbps-install -y -S -r /mnt -R $preferred_repo "$packages"
+xbps-install -y -S -r /mnt -R $preferred_repo $packages
 
 # Set hostname
 echo 'Setting hostname...'
-read -r -p 'Enter hostname: ' hostname
+read -l -p 'Enter hostname: ' hostname
 echo $hostname > /mnt/etc/hostname
 
 # Configure zfs
@@ -85,7 +85,7 @@ omit_dracutmodules+=' btrfs resume '
 
 ### Configure username
 echo 'Setting username...'
-read -r -p "Enter username: " user
+read -l -p "Enter username: " user
 
 ### Chroot
 echo 'Performing chroot to /mnt to configure service...'
