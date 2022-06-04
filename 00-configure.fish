@@ -127,7 +127,7 @@ zfs mount "zroot/ROOT/"$rootfs_dataset
 zfs mount -a
 
 # Mount EFI part
-echo "Mounting EFI partition""
+echo "Mounting EFI partition"
 mkdir -p /mnt/efi
 mount $efi_partition /mnt/efi
 

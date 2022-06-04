@@ -27,23 +27,24 @@ mount --rbind /proc /mnt/proc && mount --make-rslave /mnt/proc
 echo "GUMMIBOOT_DISABLE=1" > /mnt/etc/default/gummiboot
 
 echo 'Installing packages...'
-packages=(
-  zfs
-  zfsbootmenu
-  efibootmgr
-  gummiboot # required by zfsbootmenu
-  chrony # ntp
-  snooze # cron
-  acpid # power management
-  socklog-void # syslog daemon
-  NetworkManager
-  openresolv
-  git
-  vim
-  fish-shell
-  )
+set -l packages $(echo "
+zfs
+zfsbootmenu
+efibootmgr
+gummiboot
+chrony
+snooze
+acpid
+socklog-void
+NetworkManager
+openresolv
+git
+vim
+fish-shell
+")
 
-xbps-install -y -S -r /mnt -R $preferred_repo "${packages[@]}"
+set -l packages $(echo $packages | string trim)
+xbps-install -y -S -r /mnt -R $preferred_repo "$packages"
 
 # Set hostname
 echo 'Setting hostname...'
@@ -54,6 +55,7 @@ echo $hostname > /mnt/etc/hostname
 echo 'Copying ZFS files to /mnt...'
 cp /etc/hostid /mnt/etc/hostid
 cp /etc/zfs/zpool.cache /mnt/etc/zfs/zpool.cache
+# add cp key file here if pool is encrypted
 
 # Configure DNS (from live)
 echo 'Copying resolv.conf to /mnt...'
@@ -67,16 +69,19 @@ echo 'LANG=en_US.UTF-8' > /mnt/etc/locale.conf
 
 # Configure system
 echo 'Configuring rc.conf in /mnt...'
-echo KEYMAP=\"us\" >> /mnt/etc/rc.conf
-echo TIMEZONE=\"Asia/Manila\" >> /mnt/etc/rc.conf
+echo "\
+KEYMAP='us'
+TIMEZONE='Asia/Manila'
+" >> /mnt/etc/rc.conf
 
 # Configure dracut
 echo 'Configuring dracut in /mnt...'
-echo 'hostonly="yes"
-nofsck="yes"
-add_dracutmodules+=" zfs "
-omit_dracutmodules+=" btrfs resume "
-' > /mnt/etc/dracut.conf.d/zol.conf
+echo "\
+hostonly='yes'
+nofsck='yes'
+add_dracutmodules+=' zfs '
+omit_dracutmodules+=' btrfs resume '
+" > /mnt/etc/dracut.conf.d/zol.conf
 
 ### Configure username
 echo 'Setting username...'
@@ -84,7 +89,7 @@ read -r -p "Enter username: " user
 
 ### Chroot
 echo 'Performing chroot to /mnt to configure service...'
-echo "
+echo "\
   # Configure DNS
   resolvconf -u
   # Configure services
@@ -103,8 +108,9 @@ echo "
 " | chroot /mnt/ /bin/bash -e
 
 ### Configure fstab
-echo 'Configuring fstab in /mnt...
-echo "tmpfs     /dev/shm                  tmpfs     rw,nosuid,nodev,noexec,inode64  0 0
+echo 'Configuring fstab in /mnt...'
+echo "\
+tmpfs     /dev/shm                  tmpfs     rw,nosuid,nodev,noexec,inode64  0 0
 tmpfs     /tmp                      tmpfs     defaults,nosuid,nodev           0 0
 efivarfs  /sys/firmware/efi/efivars efivarfs  defaults                        0 0
 " >> /mnt/etc/fstab
