@@ -50,13 +50,13 @@ end
 if not efibootmgr | grep ZFSBootMenu
   echo "ZFSBootMenu not found."
   echo "Creating boot entries..."
-  efibootmgr --disk "$DISK" \
+  efibootmgr --disk "$selected_disk" \
     --part 1 \
     --create \
     --label "ZFSBootMenu Backup" \
     --loader "\EFI\ZBM\vmlinuz-backup.efi" \
     --verbose
-  efibootmgr --disk "$DISK" \
+  efibootmgr --disk "$selected_disk" \
     --part 1 \
     --create \
     --label "ZFSBootMenu" \
