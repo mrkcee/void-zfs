@@ -2,10 +2,15 @@
 
 check_if_root
 
+echo "Checking for installed nvidia drivers..."
+if not xbps-query nvidia
+  print_error "NVIDIA package not installed."
+  exit
+end
+
 echo "Installing and configuring GNOME..."
 set -l packages \
 xorg-minimal \
-nvidia \
 gnome \
 gdm
 
