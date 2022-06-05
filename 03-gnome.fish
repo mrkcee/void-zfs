@@ -5,7 +5,7 @@ check_if_root
 echo "Checking for installed nvidia drivers..."
 if not xbps-query nvidia
   print_error "NVIDIA package not installed."
-  exit
+  exit 1
 end
 
 echo "Installing and configuring GNOME..."
