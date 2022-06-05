@@ -5,7 +5,7 @@ if not fish_is_root_user
   exit 1
 end
 
-set -l function_dir /etc/fish/function
+set -l function_dir /etc/fish/functions
 
 printf 'Copying common functions to %s...\n' $function_dir
 mkdir -p $function_dir
