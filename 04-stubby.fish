@@ -31,5 +31,5 @@ nameserver ::1
 
 chattr +i /etc/resolv.conf
 
-print_success "DNS configurration is complete."
+print_success "DNS configuration is complete."
 echo "Note: update stubby.yml with your desired DNS service provider configuration."
