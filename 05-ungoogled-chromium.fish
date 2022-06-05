@@ -19,6 +19,7 @@ set -l http_get_response $(curl -Is $download_url | grep "location: https:" | se
 set -l download_url $(echo $http_get_response | string trim)
 
 set -l download_dir ~/Downloads
+mkdir -p $download_dir
 if not curl -L -o $download_dir/ungoogled-chromium-$latest_version.x86_64.xbps $download_url
   print_error "Error when downloading xbps package."
   exit 1
