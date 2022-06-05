@@ -1,22 +1,6 @@
 #!/bin/fish
 
-########## FUNCTIONS
-function print_error
-  set_color -o red; echo $argv
-  set_color normal
-end
-
-function print_success
-  set_color -o green; echo $argv
-  set_color normal
-end
-
-function print_info
-  set_color -o blue; echo $argv
-  set_color normal
-end
-
-########## MAIN START
+check_if_root
 
 # Root dataset
 set -l root_dataset $(cat /tmp/root_dataset)

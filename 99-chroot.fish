@@ -1,22 +1,7 @@
 #!/bin/fish
 
-########## FUNCTIONS
-function print_error
-  set_color -o red; echo $argv
-  set_color normal
-end
+check_if_root
 
-function print_success
-  set_color -o green; echo $argv
-  set_color normal
-end
-
-function print_info
-  set_color -o blue; echo $argv
-  set_color normal
-end
-
-########## MAIN
 echo 'Importing zpool...'
 zpool import -d /dev/disk/by-id -R /mnt zroot -N -f
 

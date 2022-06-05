@@ -1,22 +1,7 @@
 #!/bin/fish
 
-########## FUNCTIONS
-function print_error
-  set_color -o red; echo $argv
-  set_color normal
-end
+check_if_root
 
-function print_success
-  set_color -o green; echo $argv
-  set_color normal
-end
-
-function print_info
-  set_color -o blue; echo $argv
-  set_color normal
-end
-
-########## MAIN START
 ########## 1a. Select DISK to use ##########
 echo "List of available disks:"
 set -l all_disks $(find /dev/disk/by-id/ -type l ! -iwholename "*-part*" ! -iwholename "*wwn*" -printf "%f\n")

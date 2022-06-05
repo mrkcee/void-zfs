@@ -10,5 +10,4 @@ zfs umount -a
 echo 'Exporting zpool...'
 zpool export zroot
 
-set_color green; echo "Unmounting successful."
-set_color normal
+print_success "Unmounting successful."
