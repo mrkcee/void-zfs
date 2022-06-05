@@ -37,7 +37,8 @@ NetworkManager \
 openresolv \
 git \
 vim \
-fish-shell
+fish-shell \
+curl
 
 if not xbps-install -y -S -r /mnt -R $preferred_repo $packages
   print_error "Error occurred while installing additional packages. Exiting..."
