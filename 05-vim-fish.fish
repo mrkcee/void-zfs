@@ -3,7 +3,7 @@
 echo "Adding fish shell syntax highlighting support to vim..."
 
 echo "Downloading vim-fish-syntax from github..."
-set -l vim_plugins_dir "~/.vim/pack/vendor/start"
+set -l vim_plugins_dir ~/.vim/pack/vendor/start
 mkdir -p $vim_plugins_dir
 cd $vim_plugins_dir
 if not git clone --depth 1 https://github.com/khaveesh/vim-fish-syntax.git
@@ -13,7 +13,7 @@ end
 
 echo "Updating .vimrc..."
 echo "\
-if &shell =~# 'fish$'
+if &shell =~# 'fish\$'
     set shell=sh
 endif
 syntax enable
