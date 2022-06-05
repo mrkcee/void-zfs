@@ -4,7 +4,6 @@ check_if_root
 
 echo "Installing extra packages..."
 set -l packages \
-firefox \
 papirus-icon-theme \
 papirus-folders \
 font-firacode \
