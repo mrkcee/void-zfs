@@ -28,7 +28,7 @@ end
 
 print_info "Selected disk:" $selected_disk
 set -l selected_disk "/dev/disk/by-id/"$selected_disk
-set -l efi_disk "$selected_disk-part1"
+set -l efi_partition "$selected_disk-part1"
 
 # Root dataset
 set -l root_dataset $(cat /tmp/root_dataset)
@@ -147,7 +147,7 @@ echo "\
 ### Configure fstab
 echo 'Configuring fstab in /mnt...'
 echo "\
-$efi_disk /efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 0
+$efi_partition /efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 0
 efivarfs  /sys/firmware/efi/efivars  efivarfs  rw,nosuid,nodev,noexec,relatime 0 0
 tmpfs     /dev/shm                   tmpfs     rw,nosuid,nodev,noexec,inode64  0 0
 tmpfs     /tmp                       tmpfs     defaults,nosuid,nodev           0 0
