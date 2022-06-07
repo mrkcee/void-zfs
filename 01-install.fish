@@ -2,6 +2,34 @@
 
 check_if_root
 
+# Select disk
+if not set -l selected_disk $(cat /tmp/selected_installation_disk)
+  echo "List of available disks:"
+  set -l all_disks $(find /dev/disk/by-id/ -type l ! -iwholename "*-part*" ! -iwholename "*wwn*" -printf "%f\n")
+
+  set -l disk_count $(count $all_disks)
+  for i in (seq 1 $disk_count)
+    # color, index, color, disk, color
+    printf '%s(%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
+  end
+
+  read -l -p 'echo "Select the disk you want to install to: "' selected_option
+  if test "$selected_option" = ""
+    print_error "Invalid option. Exiting..."
+    exit 1
+  else if test $selected_option -ge 1 && test $selected_option -le $disk_count
+    set selected_disk $all_disks[$selected_option]
+    echo $selected_disk > /tmp/selected_installation_disk
+  else
+    print_error "Invalid option. Exiting..."
+    exit 1
+  end
+end
+
+print_info "Selected disk:" $selected_disk
+set -l selected_disk "/dev/disk/by-id/"$selected_disk
+set -l efi_disk "$selected_disk-part1"
+
 # Root dataset
 set -l root_dataset $(cat /tmp/root_dataset)
 
@@ -119,9 +147,10 @@ echo "\
 ### Configure fstab
 echo 'Configuring fstab in /mnt...'
 echo "\
-tmpfs     /dev/shm                  tmpfs     rw,nosuid,nodev,noexec,inode64  0 0
-tmpfs     /tmp                      tmpfs     defaults,nosuid,nodev           0 0
-efivarfs  /sys/firmware/efi/efivars efivarfs  defaults                        0 0
+$efi_disk /efi vfat rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=iso8859-1,shortname=mixed,utf8,errors=remount-ro 0 0
+efivarfs  /sys/firmware/efi/efivars  efivarfs  rw,nosuid,nodev,noexec,relatime 0 0
+tmpfs     /dev/shm                   tmpfs     rw,nosuid,nodev,noexec,inode64  0 0
+tmpfs     /tmp                       tmpfs     defaults,nosuid,nodev           0 0
 " >> /mnt/etc/fstab
 
 # Set root passwd
@@ -171,29 +200,6 @@ echo '  # Export locale
   # Generate initramfs, zfsbootmenu
   xbps-reconfigure -fa
 ' | chroot /mnt/ /bin/bash -e
-
-echo "List of available disks:"
-set -l all_disks $(find /dev/disk/by-id/ -type l ! -iwholename "*-part*" ! -iwholename "*wwn*" -printf "%f\n")
-
-set -l disk_count $(count $all_disks)
-for i in (seq 1 $disk_count)
-  # color, index, color, disk, color
-  printf '%s(%s) %s %s %s\n' (set_color -o white) $i (set_color -o cyan) $all_disks[$i] (set_color normal)
-end
-
-read -l -p 'echo "Select the disk you installed on: "' selected_option
-if test "$selected_option" = ""
-  print_error "Invalid option. Exiting..."
-  exit 1
-else if test $selected_option -ge 1 && test $selected_option -le $disk_count
-  set selected_disk $all_disks[$selected_option]
-else
-  print_error "Invalid option. Exiting..."
-  exit 1
-end
-
-print_info "Selected disk:" $selected_disk
-set -l selected_disk "/dev/disk/by-id/"$selected_disk
 
 echo "Checking boot EFI entries..."
 modprobe efivarfs

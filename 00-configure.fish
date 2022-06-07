@@ -25,6 +25,7 @@ end
 
 print_info "Selected disk:" $selected_disk
 set -l selected_disk "/dev/disk/by-id/"$selected_disk
+echo $selected_disk > /tmp/selected_installation_disk
 
 ########## 1b. Clear disk ##########
 dd if=/dev/zero of="$selected_disk" bs=512 count=1
