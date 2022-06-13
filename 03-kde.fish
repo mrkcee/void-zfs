@@ -11,6 +11,8 @@ end
 echo "Installing and configuring KDE..."
 set -l packages \
 xorg-minimal \
+qt5 \
+qt5-tools \
 kde5 \
 kde5-baseapps
 
