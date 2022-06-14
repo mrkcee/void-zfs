@@ -7,7 +7,6 @@ set -l packages \
 awesome \
 inotify-tools \
 alacritty \
-picom \
 rofi \
 pcmanfm \
 betterlockscreen \
@@ -26,7 +25,11 @@ echo 'Cloning config files...'
 
 echo 'Updating .xinitrc...'
 set -l xinitrc_path ~/.xinitrc
-echo "exec dbus-launch --sh-syntax --exit-with-session awesome" > $xinitrc_path
+echo "\
+pipewire &
+pipewire-pulse &
+exec dbus-launch --sh-syntax --exit-with-session awesome
+" > $xinitrc_path
 
 echo 'Updating config.fish...'
 echo "\
