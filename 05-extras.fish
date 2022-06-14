@@ -10,6 +10,7 @@ font-firacode \
 noto-fonts-cjk \
 noto-fonts-emoji \
 freefont-ttf \
+fonts-roboto-ttf \
 libreoffice-writer \
 libreoffice-calc \
 libreoffice-gnome \
