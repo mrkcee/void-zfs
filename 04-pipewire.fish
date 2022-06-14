@@ -3,7 +3,7 @@
 check_if_root
 
 set -l packages \
-pulseaudio \
+pulseaudio-utils \
 pipewire
 
 install_packages $packages
