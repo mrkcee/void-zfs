@@ -20,7 +20,11 @@ u2f-hidraw-policy \
 keepassxc \
 nextcloud-client \
 neofetch \
-htop
+pfetch \
+htop \
+ranger \
+pcmanfm \
+zathura
 
 install_packages $packages
 
