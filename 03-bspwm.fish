@@ -8,7 +8,7 @@ bspwm \
 dunst \
 alacritty \
 rofi \
-betterlockscreen \
+feh \
 elogind \
 gnome-keyring \
 xprop \
@@ -25,6 +25,12 @@ echo 'Exiting sudo...'
 exit
 
 echo 'Cloning config files...'
+set -l random_guid $(uuidgen)
+mkdir -p /tmp/$random_guid
+cd /tmp/$random_guid
+git clone --depth 1 https://github.com/mrkcee/bspwm-dotfiles.git
+./install.fish
+rm -rf /tmp/$random_guid
 
 echo 'Updating .xinitrc...'
 set -l xinitrc_path ~/.xinitrc
