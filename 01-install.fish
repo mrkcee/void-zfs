@@ -192,7 +192,7 @@ Kernel:
 " > /mnt/etc/zfsbootmenu/config.yaml
 
 # Set cmdline
-zfs set org.zfsbootmenu:commandline="ro quiet nowatchdog loglevel=4" zroot/ROOT/"$root_dataset"
+zfs set org.zfsbootmenu:commandline="ro quiet nowatchdog loglevel=0" zroot/ROOT/"$root_dataset"
 
 echo 'Generating ZFSBootMenu...'
 echo '  # Export locale
