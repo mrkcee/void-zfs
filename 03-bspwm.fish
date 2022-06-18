@@ -52,6 +52,9 @@ if test -z '$DESKTOP_SESSION'
 end
 " > ~/.config/fish/config.fish
 
+echo 'Setting git helper...'
+git config --global credential.helper /usr/libexec/git-core/git-credential-libsecret
+
 print_success "bspwm has been installed and configured successfully."
 echo "\
 NOTE:
