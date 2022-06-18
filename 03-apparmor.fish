@@ -6,6 +6,8 @@ echo "Starting apprarmor installation..."
 install_packages "apparmor"
 
 echo "Adding apparmor to kernel commandline..."
-zfs set org.zfsbootmenu:commandline="ro quiet nowatchdog loglevel=4 apparmor=1 security=apparmor" zroot/ROOT/void
+set -l current_commandline $(zfs get -H -o value org.zfsbootmenu:commandline zroot/ROOT/void)
+set -l new_commandline "$current_commandline apparmor=1 security=apparmor"
+zfs set org.zfsbootmenu:commandline="$new_commandline" zroot/ROOT/void
 
 print_success "Apparmor installation and configuration complete."
