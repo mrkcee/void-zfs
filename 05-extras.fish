@@ -24,7 +24,11 @@ pfetch \
 htop \
 ranger \
 pcmanfm \
-zathura
+evince \
+texlive \
+texlive-LuaTeX \
+texlive-XeTeX \
+texlive-bin
 
 install_packages $packages
 
