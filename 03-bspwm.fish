@@ -29,6 +29,7 @@ set -l random_guid $(uuidgen)
 mkdir -p /tmp/$random_guid
 cd /tmp/$random_guid
 git clone --depth 1 https://github.com/mrkcee/bspwm-dotfiles.git
+cd bspwm-dotfiles
 ./install.fish
 rm -rf /tmp/$random_guid
 
